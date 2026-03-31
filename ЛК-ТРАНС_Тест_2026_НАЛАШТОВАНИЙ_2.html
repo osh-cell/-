@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ЛК-ТРАНС · Тест знань Е-Договору поставки 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;800&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#080F1A;--surface:#0F1C2E;--surface2:#162237;--border:#1E3250;
+  --blue:#3B82F6;--blue-glow:rgba(59,130,246,.25);--cyan:#06B6D4;
+  --green:#10B981;--green-glow:rgba(16,185,129,.2);
+  --red:#EF4444;--amber:#F59E0B;
+  --text:#E2EAF4;--text-muted:#5B7A9D;--text-dim:#8FA8C4;
+}
+body{font-family:'Manrope',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(59,130,246,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(59,130,246,.03) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;z-index:0}
+.screen{display:none;width:100%;min-height:100vh;position:relative;z-index:1}
+.screen.active{display:flex;flex-direction:column;align-items:center}
+#screen-start{justify-content:center;padding:40px 20px}
+.start-inner{max-width:560px;width:100%;text-align:center}
+.logo-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.3);border-radius:100px;padding:8px 18px;font-family:'Unbounded',sans-serif;font-size:11px;font-weight:600;letter-spacing:.12em;color:var(--cyan);text-transform:uppercase;margin-bottom:28px}
+.logo-badge .dot{width:6px;height:6px;background:var(--cyan);border-radius:50%;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.8)}}
+.start-title{font-family:'Unbounded',sans-serif;font-size:clamp(24px,4vw,40px);font-weight:800;line-height:1.15;margin-bottom:12px;background:linear-gradient(135deg,#fff 30%,#60A5FA);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.start-sub{font-size:15px;color:var(--text-dim);line-height:1.6;margin-bottom:30px}
+.stats-row{display:flex;justify-content:center;gap:14px;margin-bottom:28px;flex-wrap:wrap}
+.stat-box{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 20px;text-align:center}
+.stat-box .num{font-family:'Unbounded',sans-serif;font-size:26px;font-weight:800;color:var(--blue);line-height:1;margin-bottom:4px}
+.stat-box .lbl{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em}
+.name-form{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:22px;margin-bottom:22px;text-align:left}
+.name-form label{display:block;font-size:11px;font-weight:700;color:var(--cyan);text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px}
+.name-form input{width:100%;padding:13px 16px;background:var(--surface2);border:1.5px solid var(--border);border-radius:10px;color:var(--text);font-family:'Manrope',sans-serif;font-size:15px;font-weight:500;outline:none;transition:border-color .2s}
+.name-form input:focus{border-color:var(--blue)}
+.name-form input::placeholder{color:var(--text-muted)}
+.name-hint{font-size:12px;color:var(--text-muted);margin-top:8px}
+.rule-box{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px 22px;text-align:left;margin-bottom:26px}
+.rule-box .rule-title{font-size:11px;font-weight:700;color:var(--amber);text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px}
+.rule-box ul{list-style:none}
+.rule-box li{font-size:13px;color:var(--text-dim);line-height:1.5;padding:3px 0 3px 20px;position:relative}
+.rule-box li::before{content:'→';position:absolute;left:0;color:var(--blue);font-size:12px}
+.btn-start{display:inline-flex;align-items:center;justify-content:center;gap:10px;background:var(--blue);color:#fff;font-family:'Unbounded',sans-serif;font-size:13px;font-weight:600;letter-spacing:.06em;padding:16px 40px;border-radius:12px;border:none;cursor:pointer;transition:all .2s;box-shadow:0 0 32px var(--blue-glow);width:100%}
+.btn-start:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 4px 40px rgba(59,130,246,.45)}
+.btn-start:disabled{opacity:.35;cursor:not-allowed}
+#screen-quiz{padding:0;min-height:100vh}
+.quiz-header{width:100%;background:var(--surface);border-bottom:1px solid var(--border);padding:12px 20px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:50}
+.q-who{font-size:12px;color:var(--cyan);white-space:nowrap;max-width:150px;overflow:hidden;text-overflow:ellipsis;font-weight:600}
+.q-counter{font-family:'Unbounded',sans-serif;font-size:12px;font-weight:600;color:var(--text-muted);white-space:nowrap}
+.q-counter span{color:var(--blue)}
+.progress-track{flex:1;height:4px;background:var(--border);border-radius:2px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--cyan));border-radius:2px;transition:width .5s cubic-bezier(.4,0,.2,1)}
+.score-badge{font-family:'Unbounded',sans-serif;font-size:11px;font-weight:600;color:var(--green);background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.25);border-radius:8px;padding:5px 10px;white-space:nowrap}
+.quiz-body{width:100%;max-width:680px;margin:0 auto;padding:32px 18px 80px;animation:fadeUp .35s ease both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+.section-divider{display:flex;align-items:center;gap:12px;padding:8px 0 6px;font-size:10px;font-weight:700;color:var(--text-muted);letter-spacing:.1em;text-transform:uppercase}
+.section-divider::after{content:'';flex:1;height:1px;background:var(--border)}
+.section-tag{display:inline-flex;align-items:center;gap:6px;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--cyan);background:rgba(6,182,212,.08);border:1px solid rgba(6,182,212,.2);border-radius:6px;padding:4px 10px;margin-bottom:16px}
+.question-text{font-size:clamp(15px,2.2vw,19px);font-weight:600;line-height:1.55;color:var(--text);margin-bottom:22px}
+.options-list{display:flex;flex-direction:column;gap:9px;margin-bottom:20px}
+.opt{display:flex;align-items:flex-start;gap:13px;padding:13px 16px;background:var(--surface);border:1.5px solid var(--border);border-radius:12px;cursor:pointer;transition:all .18s}
+.opt:hover:not(.disabled){border-color:rgba(59,130,246,.4);transform:translateX(3px);background:rgba(59,130,246,.04)}
+.opt-letter{width:28px;height:28px;border-radius:7px;background:var(--surface2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'Unbounded',sans-serif;font-size:11px;font-weight:700;color:var(--text-muted);flex-shrink:0;transition:all .18s}
+.opt:hover:not(.disabled) .opt-letter{background:var(--blue);border-color:var(--blue);color:#fff}
+.opt-text{font-size:14px;line-height:1.5;color:var(--text-dim);padding-top:4px;transition:color .18s}
+.opt:hover:not(.disabled) .opt-text{color:var(--text)}
+.opt.correct{border-color:var(--green);background:rgba(16,185,129,.08);animation:cp .4s ease}
+.opt.correct .opt-letter{background:var(--green);border-color:var(--green);color:#fff}
+.opt.correct .opt-text{color:#6EE7B7;font-weight:600}
+.opt.wrong{border-color:var(--red);background:rgba(239,68,68,.06);animation:ws .35s ease}
+.opt.wrong .opt-letter{background:var(--red);border-color:var(--red);color:#fff}
+.opt.wrong .opt-text{color:#FCA5A5}
+.opt.disabled{cursor:not-allowed}
+@keyframes cp{0%{box-shadow:0 0 0 0 var(--green-glow)}50%{box-shadow:0 0 0 12px var(--green-glow)}100%{box-shadow:0 0 0 0 var(--green-glow)}}
+@keyframes ws{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+.feedback-box{border-radius:12px;padding:15px 17px;margin-top:4px;display:none;animation:fadeUp .3s ease both}
+.feedback-box.show{display:block}
+.feedback-box.success{background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.25)}
+.feedback-box.error{background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.2)}
+.fb-header{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:7px}
+.feedback-box.success .fb-header{color:var(--green)}
+.feedback-box.error .fb-header{color:var(--red)}
+.fb-text{font-size:13px;line-height:1.6;color:var(--text-dim)}
+.fb-text strong{color:var(--text)}
+.attempt-hint{font-size:12px;color:var(--amber);margin-top:10px;display:none;align-items:center;gap:6px}
+.attempt-hint.show{display:flex}
+.btn-next{width:100%;padding:15px;background:var(--blue);color:#fff;font-family:'Unbounded',sans-serif;font-size:12px;font-weight:600;letter-spacing:.08em;border:none;border-radius:12px;cursor:pointer;margin-top:18px;display:none;align-items:center;justify-content:center;gap:10px;transition:all .2s;box-shadow:0 0 24px var(--blue-glow)}
+.btn-next.show{display:flex;animation:fadeUp .3s .1s ease both}
+.btn-next:hover{transform:translateY(-2px);box-shadow:0 4px 32px rgba(59,130,246,.5)}
+#screen-finish{justify-content:center;padding:40px 20px;text-align:center}
+.finish-inner{max-width:500px;width:100%}
+.trophy-ring{width:100px;height:100px;border-radius:50%;background:conic-gradient(var(--green) calc(var(--pct)*1%),var(--surface2) 0);display:flex;align-items:center;justify-content:center;margin:0 auto 22px;position:relative}
+.trophy-ring::before{content:'';position:absolute;inset:8px;border-radius:50%;background:var(--bg)}
+.trophy-emoji{font-size:32px;position:relative;z-index:1}
+.finish-score{font-family:'Unbounded',sans-serif;font-size:52px;font-weight:800;color:var(--green);line-height:1;margin-bottom:6px}
+.finish-label{font-size:14px;color:var(--text-muted);margin-bottom:6px}
+.finish-name-tag{font-size:13px;color:var(--cyan);margin-bottom:8px;font-weight:600}
+.passed-badge{display:inline-flex;align-items:center;gap:8px;border-radius:10px;padding:10px 22px;font-family:'Unbounded',sans-serif;font-size:13px;font-weight:700;letter-spacing:.06em;margin-bottom:24px}
+.passed-badge.yes{background:rgba(16,185,129,.12);border:1.5px solid var(--green);color:#34D399}
+.passed-badge.no{background:rgba(239,68,68,.1);border:1.5px solid var(--red);color:#F87171}
+.finish-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:22px}
+.f-stat{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 10px}
+.f-stat .f-num{font-family:'Unbounded',sans-serif;font-size:24px;font-weight:700;line-height:1;margin-bottom:4px}
+.f-stat .f-lbl{font-size:11px;color:var(--text-muted)}
+.f-stat.green .f-num{color:var(--green)}
+.f-stat.red .f-num{color:var(--red)}
+.f-stat.amber .f-num{color:var(--amber)}
+.finish-msg{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px 20px;font-size:14px;line-height:1.6;color:var(--text-dim);margin-bottom:16px;text-align:left}
+.finish-msg strong{color:var(--text);display:block;margin-bottom:4px}
+.email-status{border-radius:12px;padding:13px 16px;margin-bottom:18px;font-size:13px;display:flex;align-items:center;gap:10px}
+.email-status.cfg{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.25);color:#FCD34D}
+.email-status.sending{background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.2);color:#93C5FD}
+.email-status.sent{background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.25);color:#6EE7B7}
+.email-status.failed{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.25);color:#FCD34D}
+@keyframes spin{to{transform:rotate(360deg)}}
+.spin{animation:spin 1s linear infinite;display:inline-block}
+.btn-restart{display:inline-flex;align-items:center;gap:10px;background:var(--surface);border:1.5px solid var(--border);color:var(--text);font-family:'Unbounded',sans-serif;font-size:12px;font-weight:600;padding:13px 28px;border-radius:12px;cursor:pointer;transition:all .2s}
+.btn-restart:hover{border-color:var(--blue);color:var(--blue)}
+</style>
+</head>
+<body>
+
+<div id="screen-start" class="screen active">
+  <div class="start-inner">
+    <div class="logo-badge"><div class="dot"></div>ЛК-ТРАНС · 2026</div>
+    <h1 class="start-title">Тест знань<br>Е-Договору поставки</h1>
+    <p class="start-sub">Перевір знання умов чинного Е-Договору поставки редакції 2026 року</p>
+    <div class="stats-row">
+      <div class="stat-box"><div class="num" id="total-q-count">45</div><div class="lbl">питань</div></div>
+      <div class="stat-box"><div class="num">10</div><div class="lbl">розділів</div></div>
+      <div class="stat-box"><div class="num">4</div><div class="lbl">варіанти</div></div>
+    </div>
+    <div class="name-form">
+      <label>👤 Ім'я та прізвище</label>
+      <input type="text" id="user-name" placeholder="Наприклад: Олена Коваленко" maxlength="60" oninput="checkName()">
+      <div class="name-hint">Результат буде збережено в Google Таблицю HR після завершення</div>
+    </div>
+    <div class="rule-box">
+      <div class="rule-title">⚡ Правила</div>
+      <ul>
+        <li>Наступне питання — лише після правильної відповіді</li>
+        <li>При помилці — підказка і можливість відповісти ще раз</li>
+        <li>Всі питання — виключно з тексту чинного Е-Договору 2026</li>
+        <li>Результат автоматично зберігається після завершення</li>
+      </ul>
+    </div>
+    <button class="btn-start" id="btn-start" onclick="startQuiz()" disabled>
+      Розпочати тест
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+</div>
+
+<div id="screen-quiz" class="screen">
+  <div class="quiz-header">
+    <span class="q-who" id="q-who">—</span>
+    <span class="q-counter">№&nbsp;<span id="q-num">1</span>&nbsp;/&nbsp;<span id="q-total">45</span></span>
+    <div class="progress-track"><div class="progress-fill" id="progress-bar" style="width:0%"></div></div>
+    <div class="score-badge">✓ <span id="score-display">0</span></div>
+  </div>
+  <div class="quiz-body" id="quiz-body"></div>
+</div>
+
+<div id="screen-finish" class="screen">
+  <div class="finish-inner">
+    <div class="trophy-ring" id="trophy-ring" style="--pct:0"><div class="trophy-emoji" id="trophy-emoji">🏆</div></div>
+    <div class="finish-score" id="finish-pct">0%</div>
+    <div class="finish-label">правильних відповідей з першої спроби</div>
+    <div class="finish-name-tag" id="finish-name-tag"></div>
+    <div class="passed-badge" id="passed-badge">—</div>
+    <div class="finish-stats">
+      <div class="f-stat green"><div class="f-num" id="f-correct">0</div><div class="f-lbl">з першої спроби</div></div>
+      <div class="f-stat red"><div class="f-num" id="f-extra">0</div><div class="f-lbl">доп. спроб</div></div>
+      <div class="f-stat amber"><div class="f-num" id="f-total-fin">45</div><div class="f-lbl">питань всього</div></div>
+    </div>
+    <div class="finish-msg" id="finish-msg"><strong>Аналіз</strong>...</div>
+    <div class="email-status cfg" id="email-status">
+      <span>⚙️</span>
+      <span id="email-status-text">Налаштуйте Google Forms у блоці CONFIG для автоматичного збереження результатів</span>
+    </div>
+    <button class="btn-restart" onclick="restartQuiz()">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7a6 6 0 1 0 1.5-3.9M1 2v3h3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Пройти ще раз
+    </button>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════
+// ⚙️ НАЛАШТУВАННЯ Google Forms (заповнити після створення форми)
+// ══════════════════════════════════════════════════════
+const CONFIG = {
+  form_id: "145gnUqBPXwLmN-1gRUddbsYtQq1x5vAqTrB7vgiOQXQ",
+  entry_name: "entry.1097330024",
+  entry_score: "entry.552409351",
+  entry_correct: "entry.281125950",
+  entry_extra: "entry.974406434",
+  entry_passed: "entry.1593224865",
+  entry_date: "entry.301700691",
+  pass_threshold: 80
+};
+// ══════════════════════════════════════════════════════
+
+const Q = [
+{s:"Розділ 1 · Предмет договору та ЕДО",r:"п. 1.2",
+ q:"Про що домовились Сторони відповідно до п. 1.2 Е-Договору?",
+ o:["Про змішаний документообіг: паперовий для первинних документів і електронний для звітів.",
+    "Про перехід на електронний документообіг (ЕДО) відповідно до чинного законодавства України.",
+    "Про обмін документами виключно через електронну пошту без EDI-провайдера.",
+    "Про використання паперового документообігу як основного, з можливістю переходу на ЕДО."],
+ c:1,e:"Згідно з п. 1.2, Сторони домовились про перехід на <strong>електронний документообіг (ЕДО), відповідно до чинного законодавства України</strong>. Жодних змішаних форм Договір не передбачає."},
+{s:null,r:"п. 1.4",
+ q:"Яка платформа EDI-провайдера визначена Договором для електронного обміну документами між Сторонами?",
+ o:["Платформа «Вчасно» від ТОВ «Вчасно».",
+    "Будь-яка сертифікована EDI-платформа на вибір Постачальника.",
+    "Платформа «EDI NETWORK» від ТОВ «АТС» (edin.ua).",
+    "Платформа М.Е.Д.О.К. для обміну всіма видами документів."],
+ c:2,e:"Згідно з п. 1.4, доступ до платформи забезпечує ТОВ «АТС» (телефон/факс: (044) 359-01-12, сайт: edin.ua) шляхом надання доступу до платформи <strong>«EDI NETWORK»</strong>."},
+{s:null,r:"п. 1.7",
+ q:"У який строк Постачальник зобов'язаний надати нову Е-Специфікацію у разі зміни найменування або штрих-коду асортименту?",
+ o:["За 14 календарних днів до дати вступу змін.",
+    "За 30 календарних днів до дати вступу змін.",
+    "За 10 робочих днів до дати вступу змін в системі Постачальника.",
+    "За 7 календарних днів до дати вступу змін."],
+ c:2,e:"Згідно з п. 1.7, Постачальник зобов'язаний надати нову Е-Специфікацію <strong>за 10 робочих днів</strong> до дати вступу змін в системі Постачальника. Увага: це <em>робочі</em> дні, не календарні."},
+{s:null,r:"п. 1.7.1",
+ q:"Яка редакція Е-Специфікації є чинною у взаємовідносинах Сторін?",
+ o:["Перша підписана редакція, якщо Сторони не уклали додаткову угоду про зміну.",
+    "Будь-яка підписана редакція, оскільки кілька редакцій можуть діяти одночасно.",
+    "Остання за датою підписання редакція; одночасна дія кількох редакцій не допускається.",
+    "Редакція, яку визначить Покупець на свій розсуд у конкретному замовленні."],
+ c:2,e:"Згідно з п. 1.7.1, у взаємовідносинах Сторін діє <strong>виключно остання за датою підписання редакція</strong> Е-Специфікації. Одночасна дія кількох редакцій не допускається."},
+{s:null,r:"п. 1.9",
+ q:"Що вважається датою поставки Товару за Е-Договором?",
+ o:["Дата відправлення Е-Повідомлення про відвантаження (DESADV) Постачальником.",
+    "Дата підписання за допомогою КЕП Е-Видаткової накладної відповідальними особами.",
+    "Дата фактичного завантаження Товару в транспортний засіб на складі Постачальника.",
+    "Дата підписання Е-Замовлення (ORDER) Покупцем."],
+ c:1,e:"Згідно з п. 1.9, датою поставки вважається <strong>дата підписання за допомогою КЕП Е-Видаткової накладної</strong> відповідальними особами, що є підтвердженням переходу права власності від Постачальника до Покупця."},
+{s:"Розділ 2 · Умови поставки",r:"п. 2.1",
+ q:"На яких умовах Інкотермс 2020 здійснюється поставка Товару за Е-Договором?",
+ o:["EXW — Покупець забирає Товар зі складу Постачальника власним коштом.",
+    "FCA — Постачальник передає Товар перевізнику Покупця в узгодженому місці.",
+    "CIP — Постачальник доставляє та страхує вантаж до місця призначення.",
+    "DDP — Постачальник доставляє до місця призначення, несе всі ризики та витрати включно з розвантаженням."],
+ c:3,e:"Згідно з п. 2.1, поставка здійснюється на умовах <strong>DDP</strong> (Delivered Duty Paid). Всі витрати, пов'язані з транспортуванням, доставкою та розвантаженням, покладаються на Постачальника."},
+{s:"Розділ 2 · Договір РЦ — специфічні умови",r:"п. 2.1.1 (РЦ)",
+ q:"У який час здійснюється приймання Товару на Розподільчому Центрі для фреш-продукції?",
+ o:["З 07:00 до 15:00 у будь-який день тижня.",
+    "З 09:00 до 18:00 у робочі дні.",
+    "З 08:30 до 13:00 у робочі години.",
+    "З 06:00 до 10:00 для забезпечення ранкового розвезення."],
+ c:2,e:"Згідно з п. 2.1.1 Договору для РЦ, приймання на РЦ здійснюється у робочі години: <strong>для фреш-продукції — з 08:30 по 13:00</strong>, для всього іншого товару — з 09:00 до 16:00, відповідно до Графіку (Додаток №3)."},
+{s:null,r:"п. 2.2 (РЦ)",
+ q:"За що Постачальник компенсує Покупцю послуги згідно з п. 2.2 Договору РЦ?",
+ o:["За зберігання Товару на складі РЦ понад погоджений термін.",
+    "За адміністрування замовлень, розвантаження, переміщення, перевірку, сортування та оформлення документів на РЦ.",
+    "За рекламу та маркетинг товару в мережі магазинів Покупця.",
+    "За повернення неякісного Товару силами Покупця."],
+ c:1,e:"Згідно з п. 2.2 Договору РЦ, Покупець самостійно виконує: адміністрування замовлень, розвантаження, переміщення до зони прийомки, перевірку кількості, розпакування, сортування та оформлення документації. <strong>Постачальник компенсує ці послуги</strong> у розмірі, визначеному Додатком №2."},
+{s:"Розділ 3 · Порядок замовлення товару",r:"п. 3.2, 3.3",
+ q:"Яким документом Покупець передає Постачальнику замовлення на поставку Товару?",
+ o:["Е-Специфікацією, підписаною КЕП обома Сторонами.",
+    "Електронним документом ORDER через Платформу ЕДО EDI-провайдера.",
+    "Листом на офіційну електронну пошту Постачальника з підписом директора.",
+    "Телефонним замовленням з наступним підтвердженням SMS."],
+ c:1,e:"Згідно з п. 3.2, Е-Замовлення передається Покупцем Постачальнику у вигляді електронного документа <strong>ORDER</strong> за допомогою Платформи ЕДО EDI-провайдера, згідно затвердженого Сторонами графіка замовлень (Додаток №3)."},
+{s:null,r:"п. 3.4",
+ q:"Яким документом Постачальник підтверджує прийняття Замовлення до виконання і в який термін його потрібно надіслати?",
+ o:["Е-Листом на корпоративну пошту Покупця — протягом 24 годин після отримання ORDER.",
+    "Підтвердженням прийняття Замовлення до виконання у вигляді DESADV — не пізніше за 8 годин до поставки; якщо поставка в день замовлення — не менше ніж за 2 години.",
+    "Новою Е-Специфікацією з позначкою підтвердження — разом із прибуттям транспорту.",
+    "Підписаною Е-Видатковою накладною — протягом 4 годин після отримання ORDER."],
+ c:1,e:"Згідно з п. 3.4, Постачальник надає <strong>підтвердження про прийняття Замовлення до виконання у вигляді Е-Повідомлення про відвантаження — DESADV</strong>. Строк: не пізніше ніж <strong>за 8 годин</strong> до поставки, а при замовленні «день у день» — не менше ніж <strong>за 2 години</strong>."},
+{s:null,r:"п. 3.5",
+ q:"Що зобов'язана зробити Сторона у разі виникнення помилок у системі ЕДО, що перешкоджають отриманню електронних повідомлень?",
+ o:["Негайно зателефонувати іншій Стороні та зафіксувати факт розмови.",
+    "Повідомити іншу Сторону та EDI-провайдера не пізніше ніж за 1 (одну) годину з моменту виникнення помилок.",
+    "Надіслати паперовий дублікат замовлення рекомендованим листом.",
+    "Зачекати вирішення технічної проблеми без додаткових дій."],
+ c:1,e:"Згідно з п. 3.5, Сторона, у якої виникли помилки, зобов'язана негайно, але не пізніше ніж за <strong>1 (одну) годину</strong> з моменту їх виникнення, сповістити іншу Сторону та EDI-провайдера. Невиконання позбавляє права заявляти про неотримання повідомлень."},
+{s:null,r:"п. 3.6",
+ q:"За скільки часу до зняття Товару з виробництва Постачальник зобов'язаний повідомити Покупця?",
+ o:["За 7 календарних днів.",
+    "За 30 календарних днів.",
+    "За 14 (чотирнадцять) календарних днів.",
+    "За 10 робочих днів."],
+ c:2,e:"Згідно з п. 3.6, у разі зняття Товару з виробництва Постачальник зобов'язаний надіслати Е-Специфікацію з ознакою виводу асортименту не пізніше ніж <strong>за 14 (чотирнадцять) календарних днів</strong> до моменту зняття з виробництва."},
+{s:null,r:"п. 3.7",
+ q:"Якщо Товар відсутній на строк більше 14 календарних днів, за скільки днів Постачальник зобов'язаний повідомити про це Покупця?",
+ o:["За 14 календарних днів.",
+    "За 3 робочих дні.",
+    "За 7 (сім) календарних днів до такої відсутності Товару.",
+    "Негайно, але не пізніше першого дня відсутності."],
+ c:2,e:"Згідно з п. 3.7, у разі відсутності Товару на строк більш ніж 14 к.д., Постачальник зобов'язаний надіслати Е-Специфікацію з ознакою виводу асортименту не пізніше ніж <strong>за 7 (сім) календарних днів</strong> до такої відсутності."},
+{s:null,r:"п. 3.8",
+ q:"При якому рівні виконання замовлень Покупець має право в односторонньому порядку вивести товарну позицію з асортименту?",
+ o:["Якщо виконання складає менш ніж 80% від поданих замовлень.",
+    "Якщо виконання складає менш ніж 95% від поданих замовлень по кожній позиції.",
+    "Якщо виконання складає менш ніж 70% протягом двох місяців поспіль.",
+    "Якщо Постачальник не підтвердив жодного замовлення протягом тижня."],
+ c:1,e:"Згідно з п. 3.8, якщо виконання Е-Замовлень на кожну позицію складає <strong>менш ніж 95%</strong> від поданих, Покупець має право в односторонньому порядку прийняти рішення про виведення цієї позиції з асортименту."},
+{s:"Розділ 4 · Умови приймання товару",r:"п. 4.1",
+ q:"На підставі якого документа здійснюється приймання Товару за кількістю та якістю?",
+ o:["На підставі паперової товарно-транспортної накладної, яку надає водій.",
+    "На підставі Е-Повідомлення про відвантаження DESADV.",
+    "На підставі підписаної Е-Специфікації на поточну партію.",
+    "На підставі рахунку-фактури, виставленого Постачальником."],
+ c:1,e:"Згідно з п. 4.1, приймання Товару здійснюється виключно по кількості та якості <strong>на підставі повідомлення про відвантаження DESADV</strong>. Товар, що не відповідає Е-Замовленню, не зобов'язує Покупця до його прийняття."},
+{s:null,r:"п. 4.3",
+ q:"Яке право має Покупець, якщо Постачальник не надав підтвердження прийняття Замовлення до виконання (DESADV) до моменту поставки?",
+ o:["Покупець зобов'язаний прийняти Товар, але нарахувати штраф відповідно до п. 9.2.",
+    "Покупець має право прийняти Товар на відповідальне зберігання до з'ясування обставин.",
+    "Покупець має право відмовитись від прийняття Товару; для Постачальника настає відповідальність за п. 9.2.",
+    "Покупець повертає Товар протягом 24 годин після фактичного прийняття."],
+ c:2,e:"Згідно з п. 4.3, при відсутності DESADV (підтвердження прийняття Замовлення до виконання) <strong>Покупець має право відмовитись від прийняття Товару</strong>, а для Постачальника настає відповідальність за п. 9.2. Навіть якщо Покупець усе ж прийме Товар — відповідальність за п. 9.2 для Постачальника настає однаково (п. 4.3.1)."},
+{s:null,r:"п. 4.3.2",
+ q:"Який документ Покупець направляє Постачальнику безпосередньо після приймання Товару?",
+ o:["Е-Замовлення (ORDER) з підтвердженням прийнятої кількості.",
+    "Е-Прибуткову накладну (COMDOC_007), що відображає факт приймання Товару.",
+    "Е-Акт заліку (COMDOC_015) для взаємозаліку поставки.",
+    "Е-Видаткову накладну (COMDOC_006) з підписом КЕП."],
+ c:1,e:"Згідно з п. 4.3.2, безпосередньо після приймання Покупець направляє Постачальнику <strong>Е-Прибуткову накладну (COMDOC_007)</strong>. У разі розбіжностей — також Е-Акт про виявлені недоліки (COMDOC_005)."},
+{s:null,r:"п. 4.6",
+ q:"Якщо Покупець прийняв Товар на свій ризик при неповному пакеті документів, протягом якого часу Постачальник зобов'язаний надати всі необхідні документи?",
+ o:["Протягом 3 робочих днів з моменту приймання.",
+    "Протягом 1 (одного) робочого дня, але не більш ніж 24 години з моменту приймання.",
+    "Протягом 5 календарних днів з дати формування Прибуткової накладної.",
+    "Протягом наступної поставки на цю ж адресу."],
+ c:1,e:"Згідно з п. 4.6, Постачальник зобов'язаний надати документи впродовж <strong>1 (одного) робочого дня, але не більш ніж 24 (двадцять чотири) години</strong> з моменту приймання Товару Покупцем."},
+{s:null,r:"п. 4.16",
+ q:"Через який єдиний канал Постачальник зобов'язаний подавати будь-які зміни даних про Товар до Покупця?",
+ o:["Через електронну пошту категорійного менеджера Покупця.",
+    "Через Платформу ЕДО EDI-провайдера та оновлену Е-Специфікацію.",
+    "Виключно через Каталог споживчих товарів Listex.Info.",
+    "Через будь-який канал — на вибір Постачальника."],
+ c:2,e:"Згідно з п. 4.16, Постачальник зобов'язаний подавати будь-які зміни даних про Товар виключно <strong>через Каталог споживчих товарів Listex.Info</strong>. У разі подання змін іншими засобами — Покупець має право відмовити в їх прийнятті."},
+{s:"Розділ 5 · Якість, упаковка та маркування",r:"п. 5.2.1",
+ q:"Які зобов'язання виникають у Постачальника, якщо через неналежну якість Товару кінцевий споживач звернувся до суду?",
+ o:["Постачальник лише компенсує вартість поверненого Товару без участі у суді.",
+    "Постачальник бере участь у суді на боці Покупця та компенсує збитки протягом 7 банківських днів після набрання рішенням законної сили.",
+    "Покупець самостійно веде судовий процес, після чого виставляє претензію Постачальнику.",
+    "Відповідальність Постачальника обмежується вартістю неякісної партії Товару."],
+ c:1,e:"Згідно з п. 5.2.1, Постачальник зобов'язаний <strong>брати участь у судовому процесі на боці Покупця</strong> та за умови доведення його вини — компенсувати збитки <strong>протягом 7 (семи) банківських днів</strong> з моменту отримання рішення суду, що набрало законної сили."},
+{s:null,r:"п. 5.3",
+ q:"За скільки часу до закінчення строку дії сертифікатів Постачальник зобов'язаний надати нові документи якості?",
+ o:["За 7 календарних днів.",
+    "За 10 робочих днів.",
+    "Не пізніше ніж за 3 (три) календарних дні до закінчення строку дії.",
+    "Одночасно з першою поставкою після закінчення строку дії старих документів."],
+ c:2,e:"Згідно з п. 5.3, Постачальник зобов'язаний надати документи з належним строком дії <strong>не пізніше ніж за 3 (три) календарних дні</strong> до закінчення строку дії попередніх."},
+{s:null,r:"п. 5.7",
+ q:"За скільки часу Постачальник зобов'язаний повідомити Покупця про зміни штрих-коду Товару?",
+ o:["За 10 робочих днів.",
+    "За 7 календарних днів.",
+    "За 30 календарних днів.",
+    "Мінімум за 14 (чотирнадцять) календарних днів через Платформу ЕДО."],
+ c:3,e:"Згідно з п. 5.7, Постачальник <strong>мінімум за 14 (чотирнадцять) календарних днів</strong> має повідомити Покупця про зміни штрих-коду шляхом надання оновленої Е-Специфікації. Порушення дає право Покупцю відмовитись від прийняття такого Товару."},
+{s:null,r:"п. 5.8",
+ q:"Яка відповідальність настає для Постачальника, якщо залишковий термін придатності Товару не відповідає вимогам Додатку №2?",
+ o:["Покупець приймає Товар з уцінкою пропорційно до залишкового терміну.",
+    "Постачальник зобов'язаний замінити Товар протягом 24 годин.",
+    "Покупець має право відмовитись від прийняття; для Постачальника настає відповідальність за п. 9.4.",
+    "Товар приймається, але оплата відтерміновується на 30 днів."],
+ c:2,e:"Згідно з п. 5.8, у разі невідповідності залишкового терміну придатності Покупець <strong>має право відмовитися від прийняття такого Товару</strong>, а для Постачальника настає відповідальність, передбачена <strong>п. 9.4</strong> Е-Договору."},
+{s:"Розділ 6 · Реалізація та умови повернення",r:"п. 6.2, 6.3",
+ q:"Якщо представник Постачальника не з'явився для складання Е-Акту про приховані недоліки в установлений термін, які дії Покупця?",
+ o:["Покупець чекає до приїзду представника, реалізація при цьому продовжується.",
+    "Покупець складає Е-Акт в односторонньому порядку — він є належним доказом та має пріоритетну силу в суді.",
+    "Покупець звертається до незалежного експерта за власний рахунок.",
+    "Покупець повертає Товар без складання будь-яких актів."],
+ c:1,e:"Згідно з п. 6.3, якщо Постачальник не з'явився в строк (не більше 5 к.д.), Покупець складає <strong>Е-Акт в односторонньому порядку</strong>, який підписується КЕП та є <strong>належним доказом, що має пріоритетну силу у суді</strong>."},
+{s:null,r:"п. 6.4",
+ q:"У який термін Постачальник зобов'язаний замінити неякісний Товар на якісний після отримання вимоги?",
+ o:["Протягом 10 календарних днів.",
+    "Протягом 3 робочих днів.",
+    "Не пізніше 5 (п'яти) календарних днів, власним коштом.",
+    "Протягом наступної планової поставки без обмеження терміну."],
+ c:2,e:"Згідно з п. 6.4, Постачальник зобов'язаний <strong>не пізніше 5 (п'яти) календарних днів</strong> з моменту отримання вимоги, <strong>власним коштом</strong>, замінити весь неякісний Товар або здійснити допоставку. При невиконанні — відповідальність за п. 9.5."},
+{s:null,r:"п. 6.6",
+ q:"До якого числа місяця Покупець має право ініціювати повернення Товару Постачальнику?",
+ o:["До 15 числа поточного місяця.",
+    "До 30 числа поточного місяця.",
+    "До 25 числа поточного місяця.",
+    "Без обмежень за датою — у будь-який день місяця."],
+ c:2,e:"Згідно з п. 6.6, Покупець має право повернути Товар Постачальнику <strong>до 25 числа поточного місяця</strong> у визначених Договором випадках (редизайн, повернення споживачів, кінець сезону, залишки акційного товару, закриття торгової точки тощо)."},
+{s:null,r:"п. 6.9 (нумерація договору)",
+ q:"Протягом якого терміну Постачальник зобов'язаний вивезти Товар після отримання Повідомлення про повернення (RETANN)?",
+ o:["Протягом 10 календарних днів.",
+    "Протягом 5 (п'яти) робочих днів.",
+    "До кінця поточного місяця.",
+    "Під час наступної планової поставки."],
+ c:1,e:"Згідно з Договором, Постачальник зобов'язаний вивезти Товар <strong>протягом 5 (п'яти) робочих днів</strong> з моменту отримання RETANN. При невиконанні настає відповідальність за п. 9.5."},
+{s:null,r:"п. 6 (умови щодо прострочення вивозу)",
+ q:"Яке право має Покупець, якщо Постачальник не вивіз Товар понад 7 робочих днів після встановленого терміну?",
+ o:["Покупець зобов'язаний зберігати Товар безкоштовно до приїзду Постачальника.",
+    "Покупець утилізує Товар, Постачальник компенсує всі витрати на утилізацію та повну вартість продукції.",
+    "Покупець продає Товар за залишковою вартістю, утримуючи різницю як компенсацію.",
+    "Покупець відправляє Товар назад на склад Постачальника за власний рахунок."],
+ c:1,e:"Згідно з п. 9.5, при порушенні строку вивезення понад <strong>7 (сім) робочих днів</strong> Покупець вправі утилізувати Товар, а Постачальник <strong>безумовно компенсує всі витрати на утилізацію та повну вартість продукції</strong>. Покупець звільняється від обов'язку сплачувати за такий Товар."},
+{s:"Розділ 7 · Ціна, оплата та розрахунки",r:"п. 7.2",
+ q:"Який технологічний цикл встановлено для введення в дію нових цін на Товар?",
+ o:["Повідомлення за 14 днів → автоматичне погодження, якщо немає письмової відмови.",
+    "Повідомлення за 30 днів → розгляд Покупцем 14 днів → набрання чинності новою Е-Специфікацією не раніше ніж через 7 днів після погодження.",
+    "Повідомлення за 7 днів → погодження Е-Специфікацією → зміна з 1-го числа наступного місяця.",
+    "Повідомлення за 3 дні → автоматична зміна в системі через 24 години."],
+ c:1,e:"Згідно з п. 7.2: <strong>повідомлення не менше ніж за 30 к.д.</strong> → Покупець розглядає та погоджує або відмовляє протягом <strong>14 к.д.</strong> → нова Е-Специфікація набуває сили <strong>не раніше ніж через 7 к.д.</strong> з дня погодження обома Сторонами."},
+{s:null,r:"п. 7.2",
+ q:"Що відбувається, якщо Покупець вибірково не погодив зміну цін по окремих позиціях?",
+ o:["Постачальник зобов'язаний постачати всі позиції за старими цінами до кінця року.",
+    "Покупець автоматично приймає нові ціни через 14 днів мовчазної згоди.",
+    "Постачальник надає нову Е-Специфікацію без непогоджених позицій; Покупець припиняє замовлення на них, а Постачальник звільняється від обов'язку їх постачати.",
+    "Постачальник має право зупинити поставки всього асортименту до повного погодження."],
+ c:2,e:"Згідно з п. 7.2, при вибірковому непогодженні Постачальник <strong>надає нову Е-Специфікацію без непогоджених позицій</strong>. Покупець припиняє замовлення на ці позиції, а Постачальник звільняється від зобов'язання їх постачати з дати запланованої зміни цін."},
+{s:null,r:"п. 7.5",
+ q:"Скільки разів на рік Постачальник може ініціювати збільшення цін на Товар за загальним регламентом?",
+ o:["Без обмежень, але кожна зміна має бути обґрунтована.",
+    "Не більше 12 разів (раз на місяць).",
+    "Не більше 6 (шести) разів на рік.",
+    "Не більше 2 разів на рік (сезонні зміни)."],
+ c:2,e:"Згідно з п. 7.5, Постачальник зобов'язується не збільшувати ціни <strong>більше ніж 6 (шість) разів на рік</strong>. Виняток (п. 7.5.1): при зміні курсу національної валюти більше ніж на 10% кількість підвищень не обмежується."},
+{s:null,r:"п. 7.7",
+ q:"Який порядок оплати суми ПДВ (20% від вартості Товару) встановлено Е-Договором?",
+ o:["ПДВ сплачується разом з основною сумою одночасно — одним платежем одразу після поставки.",
+    "Покупець сплачує всю суму (включно з ПДВ) лише після реалізації Товару кінцевим споживачем.",
+    "Основна сума Товару сплачується за графіком (Додаток №5). Сума ПДВ (20%) НЕ сплачується до реєстрації Постачальником ПН в ЄРПН; після реєстрації та забезпечення доступності ПН через Платформу ЕДО — оплата 20% протягом 5 (п'яти) календарних днів.",
+    "ПДВ сплачується наприкінці звітного кварталу незалежно від реєстрації ПН Постачальником."],
+ c:2,e:"Згідно з п. 7.7, основна оплата за Товар здійснюється у строк, визначений Додатком №5. Окремо — <strong>сума ПДВ (20%) не сплачується Постачальнику до моменту реєстрації ним податкової накладної в ЄРПН</strong>. Після реєстрації ПН та забезпечення її доступності через Платформу ЕДО Покупець сплачує 20% <strong>протягом 5 (п'яти) календарних днів</strong> з дати такої реєстрації."},
+{s:null,r:"п. 7.12",
+ q:"Яка регулярність звірки взаєморозрахунків передбачена Договором?",
+ o:["Щомісячно до 30 числа наступного місяця.",
+    "Подекадно (кожні 10 днів) впродовж 5 робочих днів, або до 05 числа місяця, наступного за звітним.",
+    "Щоквартально за результатами роботи за квартал.",
+    "Тільки у разі виникнення суперечок між Сторонами."],
+ c:1,e:"Згідно з п. 7.12, Сторони проводять звірку взаєморозрахунків <strong>подекадно впродовж 5 робочих днів</strong> або <strong>до 05 числа місяця, наступного за звітним</strong> (відповідно до позначки у Договорі)."},
+{s:null,r:"п. 7.14",
+ q:"Яким документом оформлюється залік зустрічних однорідних вимог?",
+ o:["Паперовим Актом заліку, підписаним директорами обох Сторін.",
+    "Електронним листом з переліком взаємних вимог та їх підтвердженням.",
+    "Е-Актом заліку зустрічних однорідних вимог (COMDOC_015), підписаним КЕП в системі ЕДО.",
+    "Додатковою угодою до Е-Договору, підписаною та скріпленою печатками."],
+ c:2,e:"Згідно з п. 7.14, залік оформлюється <strong>Е-Актом заліку зустрічних однорідних вимог (COMDOC_015)</strong>, підписаним КЕП Сторонами в системі ЕДО відповідно до схеми №3 Додатку №1."},
+{s:null,r:"п. 8.3",
+ q:"Протягом якого часу Покупець зобов'язаний зареєструвати розрахунок коригування в ЄРПН після його отримання від Постачальника?",
+ o:["Протягом 5 (п'яти) календарних днів.",
+    "Протягом 30 (тридцяти) календарних днів.",
+    "Протягом 15 (п'ятнадцяти) календарних днів з дня отримання.",
+    "Протягом строків, встановлених Постачальником у кожному конкретному документі."],
+ c:2,e:"Згідно з п. 8.3, Покупець зобов'язаний зареєструвати розрахунок коригування в ЄРПН <strong>впродовж 15 (п'ятнадцяти) календарних днів</strong> з дня отримання такого розрахунку від Постачальника."},
+{s:null,r:"п. 6.11 / п. 8.3.1",
+ q:"У який строк Постачальник зобов'язаний скласти та направити Покупцю розрахунок коригування (РК) до податкової накладної у разі повернення Товару?",
+ o:["Протягом 5 робочих днів з дати вивозу Товару зі складу Покупця.",
+    "Протягом 15 к.д. — відповідно до загального регламенту реєстрації РК в ЄРПН.",
+    "Не пізніше 2 (двох) робочих днів з дати оформлення документів повернення.",
+    "Наприкінці звітного місяця, в якому відбулося повернення Товару."],
+ c:2,e:"Згідно з п. 6.11 обох Е-Договорів (РЦ та ТТ), а також п. 8.3.1, Постачальник зобов'язаний скласти та направити РК <strong>не пізніше 2 (двох) робочих днів</strong> з дати оформлення документів повернення Товару. Ця норма є однаковою для обох договорів."},
+{s:null,r:"п. 8.3.2",
+ q:"Яке право має Покупець, якщо Постачальник направив РК із запізненням або з порушеннями?",
+ o:["Покупець може самостійно скласти РК замість Постачальника.",
+    "Покупець вправі призупинити оплату або утримати суму з наступних платежів до отримання належного РК.",
+    "Покупець нараховує штраф 1% від суми РК за кожен день затримки.",
+    "Покупець звертається до ДПС з заявою про порушення з боку Постачальника."],
+ c:1,e:"Згідно з п. 8.3.2, до моменту отримання належного РК Покупець має право <strong>призупинити оплату за поставлений Товар або здійснити утримання відповідних сум із наступних платежів</strong>."},
+{s:"Розділ 9 · Відповідальність сторін",r:"п. 9.2",
+ q:"Яка відповідальність передбачена для Постачальника за ненадання або некоректне направлення DESADV?",
+ o:["Штраф у фіксованому розмірі 1000 грн за кожен факт порушення.",
+    "Штрафна санкція у розмірі, визначеному Додатком №2, за кожен випадок такого порушення.",
+    "Повернення Товару за рахунок Постачальника без права повторного постачання.",
+    "Пеня у розмірі подвійної ставки НБУ від вартості партії Товару."],
+ c:1,e:"Згідно з п. 9.2, за ненадання або некоректне направлення DESADV Постачальник зобов'язаний сплатити <strong>штрафну санкцію у розмірі, визначеному Додатком №2</strong>, за кожен випадок такого порушення."},
+{s:null,r:"п. 9.4",
+ q:"Яку відповідальність несе Постачальник за непоставку, порушення строків або недопоставку Товару?",
+ o:["Лише відшкодовує витрати Покупця на повторне замовлення аналогічного Товару.",
+    "Покупець має право стягнути з Постачальника втрачену вигоду у розмірі та порядку, визначених Додатком №2.",
+    "Постачальник доставляє Товар наступної доби без жодних штрафів.",
+    "Сплачує пеню у розмірі 0,1% від вартості непоставленого Товару за кожен день."],
+ c:1,e:"Згідно з п. 9.4, за непоставку, порушення строків або недопоставку Покупець має право стягнути з Постачальника <strong>втрачену вигоду у розмірі та порядку, визначених Додатком №2</strong>, від загальної вартості такого Товару."},
+{s:null,r:"п. 9.6",
+ q:"Яка відповідальність Покупця за порушення строків оплати за Товар?",
+ o:["Штраф у фіксованому розмірі, визначеному Додатком №2.",
+    "Пеня у розмірі подвійної облікової ставки НБУ від несвоєчасно сплаченої суми за кожен день прострочення.",
+    "Відсотки у розмірі 1% від суми заборгованості щомісяця.",
+    "Постачальник має право призупинити поставки до моменту погашення заборгованості."],
+ c:1,e:"Згідно з п. 9.6, при порушенні Покупцем строків оплати, він сплачує Постачальнику <strong>пеню у розмірі подвійної облікової ставки НБУ від несвоєчасно сплаченої суми за кожний день такого прострочення</strong>."},
+{s:null,r:"п. 9.8",
+ q:"Чи може Постачальник призупинити поставки Товару, якщо Покупець затримує оплату або утримує суми штрафів?",
+ o:["Так — при заборгованості понад 30 днів та після письмового попередження.",
+    "Так — якщо борг перевищує вартість двох поставок.",
+    "Ні — утримання Покупцем оплати не є підставою для призупинення Постачальником поставок.",
+    "Так — але тільки після рішення суду."],
+ c:2,e:"Згідно з п. 9.8, утримання Покупцем виконання зобов'язань щодо оплати <strong>не є підставою для призупинення Постачальником поставок Товару</strong> та не може бути підставою для невиконання зобов'язань Постачальника за іншими договорами."},
+{s:null,r:"п. 9.10",
+ q:"Яким чином підтверджується факт нарахування штрафних санкцій та коли претензія вважається погодженою?",
+ o:["Штраф нараховується автоматично системою ЕДО та не вимагає підтвердження.",
+    "Претензія направляється через Платформу ЕДО або на email; вважається погодженою, якщо Сторона не надіслала обґрунтованого заперечення протягом 5 робочих днів.",
+    "Штраф набирає чинності лише після рішення суду або арбітражного трибуналу.",
+    "Претензія вважається погодженою через 30 календарних днів без відповіді."],
+ c:1,e:"Згідно з п. 9.10, факт нарахування підтверджується направленням претензії через Платформу ЕДО або на email. Претензія вважається погодженою, якщо Сторона не надіслала <strong>обґрунтованого листа-заперечення протягом 5 (п'яти) робочих днів</strong> з дня направлення претензії."},
+{s:"Розділи 10–13 · Особливі умови. Форс-мажор. Строк та вирішення спорів",r:"п. 10.3",
+ q:"За якої умови зміни та доповнення до Е-Договору мають юридичну силу?",
+ o:["Якщо вони погоджені в письмовому листі на фірмовому бланку обох Сторін.",
+    "Якщо вони складені через Платформу ЕДО та підписані КЕП уповноваженими представниками Сторін.",
+    "Якщо вони погоджені в месенджері та підтверджені email від керівників.",
+    "Якщо вони нотаріально посвідчені та скріплені печатками підприємств."],
+ c:1,e:"Згідно з п. 10.3, зміни та доповнення мають юридичну силу <strong>лише якщо вони складені через Платформу ЕДО та підписані КЕП</strong> уповноваженими представниками Сторін. Будь-яка усна чи паперова домовленість без КЕП не має юридичної сили."},
+{s:null,r:"п. 10.8",
+ q:"Яке право має Покупець у разі виявлення фактів корупційної пропозиції від працівника Постачальника?",
+ o:["Звернутися до правоохоронних органів, але Договір продовжує діяти.",
+    "Нарахувати штраф, передбачений Додатком №2.",
+    "В односторонньому порядку розірвати Е-Договір; він вважається розірваним з моменту повідомлення Постачальника.",
+    "Призупинити оплату до з'ясування обставин."],
+ c:2,e:"Згідно з п. 10.8, у разі встановлення фактів порушення антикорупційного застереження Покупець має право <strong>в односторонньому порядку розірвати Е-Договір</strong>. Е-Договір вважається розірваним з моменту повідомлення про це Постачальника."},
+{s:null,r:"п. 11.2",
+ q:"Яким документом підтверджується настання форс-мажорних обставин?",
+ o:["Офіційним повідомленням від ДСНС або іншого державного органу.",
+    "Довідкою Торгово-промислової палати України або її територіальних відділень.",
+    "Рішенням суду, що підтверджує наявність непереборної сили.",
+    "Внутрішнім наказом по підприємству Сторони, яка посилається на форс-мажор."],
+ c:1,e:"Згідно з п. 11.2, належним підтвердженням форс-мажорних обставин є <strong>довідка Торгово-промислової палати України або її територіальних відділень</strong>."},
+{s:null,r:"п. 12.3",
+ q:"Яким є порядок одностороннього розірвання Е-Договору та які зобов'язання виникають при цьому?",
+ o:["Договір розривається негайно з дати надсилання повідомлення; жодних зобов'язань не виникає.",
+    "Кожна Сторона може розірвати Договір, попередивши іншу Сторону за 30 к.д. до бажаної дати; Сторони зобов'язані виконати всі фінансові розрахунки та зобов'язання.",
+    "Розірвання можливе лише за рішенням суду або погодженням обох Сторін.",
+    "Договір може бути розірваний тільки наприкінці поточного календарного року."],
+ c:1,e:"Згідно з п. 12.3, кожна Сторона має право розірвати Договір, попередивши іншу Сторону <strong>за 30 (тридцять) календарних днів</strong> до бажаної дати розірвання. При цьому Сторони зобов'язуються <strong>виконати всі фінансові розрахунки та зобов'язання</strong>."},
+{s:"Розділ 6 · Повернення — додаткові умови",r:"п. 6.7",
+ q:"Яке право має Покупець, якщо Товар не був проданий протягом терміну придатності (реалізації)?",
+ o:["Покупець зобов'язаний утилізувати Товар за власний рахунок після закінчення терміну придатності.",
+    "Покупець може повернути Товар, а Постачальник зобов'язаний забрати його в повному обсязі — за умови відсутності інших домовленостей між Сторонами (наприклад, компенсації за роботу без повернення).",
+    "Покупець виставляє уцінку та реалізує Товар зі знижкою, а різницю стягує з Постачальника.",
+    "Покупець зберігає Товар до наступного сезону за рахунок Постачальника."],
+ c:1,e:"Згідно з п. 6.7, якщо Товар не був проданий протягом терміну придатності, Покупець має право повернути його, а <strong>Постачальник зобов'язаний забрати в повному обсязі — але лише за умови відсутності інших домовленостей між Сторонами</strong>. Якщо Сторони домовились про компенсацію за роботу без права повернення — ця норма не застосовується. При порушенні строків вивезення понад 7 робочих днів — Покупець має право утилізувати Товар."},
+{s:null,r:"п. 6.8",
+ q:"Який конкретний кількісний критерій «низького рівня попиту» дає Покупцю право повернути Товар Постачальнику в повному обсязі?",
+ o:["Продаж менше трьох одиниць товару на день з однієї торгової точки.",
+    "Відсутність жодного продажу товару протягом одного місяця.",
+    "Продаж менше однієї логістичної упаковки Товару на тиждень з однієї торгової точки.",
+    "Залишки товару перевищують двомісячний обсяг продажу в мережі."],
+ c:2,e:"Згідно з п. 6.8, критерій низького попиту — це <strong>продаж менше однієї логістичної упаковки Товару на тиждень з однієї торгової точки</strong>. За цього показника Покупець має право повернути Товар, а Постачальник зобов'язаний забрати його в повному обсязі."},
+{s:null,r:"п. 6.10",
+ q:"У який строк Постачальник зобов'язаний відшкодувати Покупцю вартість поверненого Товару?",
+ o:["Протягом 14 (чотирнадцяти) календарних днів з дати вивозу Товару.",
+    "Протягом 3 (трьох) банківських днів на підставі письмової вимоги Покупця — 100% сплаченої вартості.",
+    "Протягом 30 календарних днів після підписання Е-Накладної на повернення.",
+    "Після реєстрації розрахунку коригування в ЄРПН — без обмеження строку."],
+ c:1,e:"Згідно з п. 6.10, Постачальник повинен прийняти повернений Товар з відшкодуванням Покупцю <strong>100% сплаченої вартості впродовж 3 (трьох) банківських днів</strong> на підставі письмової вимоги Покупця."},
+{s:null,r:"п. 6.12",
+ q:"Який ланцюжок Е-документів встановлено Договором для оформлення повернення Товару?",
+ o:["Покупець формує COMDOC_012 → Постачальник підписує → взаємозалік.",
+    "Покупець формує RETANN → Постачальник формує RETINS → Покупець формує COMDOC_012, підписує КЕП → Постачальник підписує КЕП.",
+    "Постачальник формує RETINS → Покупець підтверджує RETANN → підписується COMDOC_006.",
+    "Покупець надсилає EMAIL-повідомлення → Постачальник підтверджує → формується паперова накладна."],
+ c:1,e:"Згідно з п. 6.12, ланцюжок повернення: <strong>RETANN (Покупець) → RETINS (Постачальник) → COMDOC_012 (Покупець підписує КЕП) → Постачальник перевіряє та підписує КЕП</strong>. Весь обмін — через Платформу ЕДО EDI-провайдера відповідно до Схеми 2 Додатку №1."},
+{s:"Договір ТТ · Адреси пунктів доставки",r:"п. 2.2 (ТТ)",
+ q:"За скільки часу Покупець зобов'язаний повідомити Постачальника про зміну адрес пунктів доставки Товару (Договір ТТ)?",
+ o:["За 14 календарних днів до зміни адреси.",
+    "За 30 календарних днів — як і для зміни цін.",
+    "За 7 (сім) календарних днів до орієнтовної дати поставки, шляхом надсилання оновленого Додатку №3.",
+    "Негайно після прийняття рішення про зміну адреси."],
+ c:2,e:"Згідно з п. 2.2 Договору ТТ, у разі зміни адрес пунктів доставки Покупець зобов'язаний проінформувати Постачальника <strong>за 7 (сім) календарних днів</strong> до орієнтовної дати поставки шляхом надсилання через Платформу ЕДО оновленого Додатку №3, який набирає чинності з моменту підписання КЕП."},
+{s:"Розділ 9 · Відповідальність — фізичні збитки",r:"п. 9.12",
+ q:"Протягом якого часу Постачальник зобов'язаний відшкодувати Покупцю збитки, якщо його водій пошкодив майно торгової точки під час доставки?",
+ o:["Протягом 14 (чотирнадцяти) календарних днів з дати складання акту про пошкодження.",
+    "Протягом 30 (тридцяти) к.д. після пред'явлення письмової претензії Покупцем.",
+    "Протягом 5 (п'яти) робочих днів.",
+    "Одночасно з наступним платежем за Товар — шляхом взаємозаліку."],
+ c:2,e:"Згідно з п. 9.12, якщо Постачальник під час доставки Товару пошкодить прилеглу до торгової точки територію або приміщення, він зобов'язаний відшкодувати Покупцю такі збитки <strong>протягом 5 (п'яти) робочих днів</strong>."}
+,
+// ─── ДОДАНІ З ПОПЕРЕДНЬОГО ТЕСТУ — УНІКАЛЬНІ ТЕМИ ──────────────
+{s:"Розділ 4 · Документи якості при поставці",r:"п. 4.4",
+ q:"Що зобов'язаний сформувати Постачальник на Платформі EDI-провайдера на момент отримання Товару Покупцем?",
+ o:["Лише паперову товарно-транспортну накладну, підписану водієм.",
+    "Пакет Е-документів: Е-Повідомлення про відвантаження (DESADV) та інші обов'язкові документи — Видаткову/Прибуткову накладні, ТТН, документи якості та відповідності партії Товару, дозволи тощо.",
+    "Тільки рахунок-фактуру — решту документів можна надати протягом 3 днів.",
+    "Будь-який із перелічених документів на вибір Постачальника."],
+ c:1,e:"Згідно з п. 4.4, на момент отримання Покупцем Товару Постачальник зобов'язаний на Платформі EDI-провайдера сформувати <strong>пакет Е-документів</strong>, що складається з <strong>Е-Повідомлення про відвантаження (DESADV)</strong> та інших обов'язкових документів: Видаткова/Прибуткова накладні, ТТН, <strong>документи, що засвідчують якість та відповідність партії Товару</strong>, дозволи. Відсутність повного пакету — підстава для відмови у прийомці."},
+
+{s:"Розділ 4 · Акт розбіжностей",r:"п. 4.3.2, 4.8",
+ q:"Як фіксуються розбіжності по кількості або якості, виявлені під час приймання Товару?",
+ o:["Водій і комірник усно погоджують кількість, бухгалтер вносить правки пізніше.",
+    "Покупець складає паперовий Акт про виявлені недоліки, який підписується представником Постачальника на місці; потім на його підставі формується Е-Акт (COMDOC_005).",
+    "Постачальник надсилає виправлений DESADV з правильними даними протягом 1 години.",
+    "Комірник самостійно коригує кількість в системі ТСД без складання будь-яких актів."],
+ c:1,e:"Згідно з п. 4.3.2 та 4.8, при виявленні розбіжностей формується <strong>паперовий примірник Акту про виявлені недоліки, підписаний представником Постачальника на місці</strong>. На підставі підписаного паперового Акту формується Е-Акт про виявлені недоліки (COMDOC_005). COMDOC_007 — це Прибуткова накладна при нормальному прийманні."},
+
+{s:"Розділ 4 · Ціна при прийманні",r:"п. 1.7.1, 4.1, 7.7",
+ q:"Чи зобов'язаний комірник або приймальник перевіряти ціну кожної одиниці товару під час фізичного приймання на складі?",
+ o:["Так — комірник звіряє ціну в паперовій накладній водія з внутрішнім прайсом мережі.",
+    "Ні — ціновий контроль відбувається автоматично на рівні системи: ЕДІН не пропускає DESADV, якщо ціна не відповідає чинній Е-Специфікації. Комірник контролює кількість і якість.",
+    "Так — але тільки якщо загальна сума поставки перевищує 50 000 грн.",
+    "Так — якщо Постачальник усно повідомив про зміну ціни в день поставки."],
+ c:1,e:"Ціновий контроль зашитий у систему: ЕДІН <strong>не пропускає DESADV</strong>, якщо ціна відрізняється від чинної Е-Специфікації, підписаної КЕП обома Сторонами. Приймальник на складі фокусується на фізичних параметрах — кількості та якості. Перевірка ціни «вручну» на рампі є зайвою і не передбачена Договором."},
+
+{s:"Розділ 4 · Неможливість надлишку",r:"п. 3.4, 4.1",
+ q:"Чому при прийманні Товару технічно неможливе виникнення «надлишку» — більшої кількості або іншого товару, ніж у замовленні?",
+ o:["Комірники мають усну вказівку не брати більше замовленого.",
+    "Система ЕДІН автоматично блокує DESADV, якщо кількість або найменування перевищують або відрізняються від ORDER та чинної Е-Специфікації.",
+    "Надлишки завантажуються окремим документом після розвантаження.",
+    "Контроль здійснюється лише за вагою автомобіля на в'їзді на склад."],
+ c:1,e:"Згідно з п. 3.4, DESADV повинен містити <strong>кількість Товару, що не перевищує вказану в ORDER</strong>, а ціна має відповідати чинній Е-Специфікації. <strong>ЕДІН блокує DESADV на етапі формування</strong>, якщо ці умови порушені — надіслати «зайвий» товар системно неможливо."},
+
+{s:"Розділ 5 · Право відмови при прийманні",r:"п. 5.2, 4.1",
+ q:"Які права має Покупець, якщо під час приймання виявлено невідповідність Товару за якістю або якщо Товар не відповідає Е-Замовленню?",
+ o:["Прийняти Товар з уцінкою та виставити претензію на різницю.",
+    "Покупець не зобов'язаний приймати такий Товар; Постачальник гарантує безпечність та відповідність Товару і зобов'язаний розпорядитися ним.",
+    "Обов'язково прийняти на відповідальне зберігання до приїзду незалежного експерта.",
+    "Прийняти Товар, скласти акт і чекати рішення суду."],
+ c:1,e:"Згідно з п. 4.1, поставлений Товар, <strong>який не відповідає Е-Замовленню, не зобов'язує Покупця до його прийняття</strong>. Згідно з п. 5.2, Постачальник гарантує безпечність Товарів — у разі виявлення невідповідності він зобов'язаний розпорядитися товаром самостійно."},
+
+{s:"Розділ 5 · Маркування та інформація для споживача",r:"п. 5.9",
+ q:"Яка відповідальність передбачена для Постачальника, якщо Товар не містить інформації для споживача відповідно до Закону «Про захист прав споживачів» (маркування, склад, терміни тощо)?",
+ o:["Покупець самостійно доклеює стікери з необхідною інформацією.",
+    "Постачальник несе відповідальність, передбачену п. 9.1 Е-Договору (відшкодування всіх прямих збитків Покупця).",
+    "Товар приймається, але оплата відтерміновується на 90 днів.",
+    "Жодної відповідальності, якщо кінцевий споживач офіційно не поскаржився."],
+ c:1,e:"Згідно з п. 5.9, Товар повинен містити інформацію, передбачену ст. 15 ЗУ «Про захист прав споживачів» та ЗУ «Про інформацію для споживачів щодо харчових продуктів». <strong>У разі порушення — відповідальність за п. 9.1</strong>: відшкодування штрафів від Держпродспоживслужби та інших збитків Покупця."},
+
+{s:"Розділ 8 · Зведені податкові накладні",r:"п. 8.1, 8.12",
+ q:"Яку програму використовує Покупець і яка periodичність складання зведених ПН при ритмічних поставках?",
+ o:["Покупець використовує Вчасно; зведені ПН складаються раз на місяць.",
+    "Будь-яка програма; Постачальник складає ПН за кожну окрему поставку.",
+    "Покупець використовує М.Е.Д.О.К.; при 5+ поставках на місяць Постачальник зобов'язаний складати зведені ПН двічі: 15-го числа (за 1–15 день) та в останній день місяця (за 16–останній день).",
+    "М.Е.Д.О.К.; зведені ПН складаються раз на квартал за підсумками."],
+ c:2,e:"Згідно з п. 8.1 та 8.12, Покупець користується <strong>М.Е.Д.О.К.</strong> При ритмічному характері поставок (5 і більше на місяць) Постачальник складає зведені ПН <strong>двічі: 15-го числа — за 1–15 день, та в останній день місяця — за 16–останній день</strong> звітного місяця."},
+
+{s:"Розділ 8 · Втрата податкового кредиту",r:"п. 8.4",
+ q:"Які зобов'язання несе Сторона-порушник, якщо через її вину інша Сторона втратила податковий кредит з ПДВ (блокування, нереєстрація ПН)?",
+ o:["Кожна Сторона несе власні податкові ризики самостійно — Договір це не регулює.",
+    "Сторона-порушник відшкодовує іншій Стороні збитки у повному обсязі суми ПДВ впродовж 30 календарних днів з моменту отримання претензії.",
+    "Відповідальність настає тільки якщо втрата підтверджена рішенням суду.",
+    "Сторона-порушник сплачує штраф 10% від суми заблокованої ПН."],
+ c:1,e:"Згідно з п. 8.4, у разі нездійснення/несвоєчасної реєстрації ПН або її блокування з вини Сторони, <strong>Сторона-порушник зобов'язана відшкодувати іншій Стороні збитки у повному обсязі суми ПДВ впродовж 30 календарних днів</strong> з моменту отримання претензії. До виконання цього зобов'язання інша Сторона має право утриматися від грошових зобов'язань."},
+
+{s:"Розділ 9 · Недопоставка під акцію",r:"п. 9.4.1",
+ q:"Яка відповідальність передбачена для Постачальника за недопоставку або непоставку Товару, заявленого для проведення акції (стимулювання збуту)?",
+ o:["Постачальник просто допоставляє Товар після закінчення акції без санкцій.",
+    "Покупець має право стягнути упущену вигоду у розмірі та порядку, визначених Додатком №2, від загальної вартості непоставленого або недопоставленого акційного Товару.",
+    "Штраф — 5% від вартості непоставленого акційного Товару фіксовано.",
+    "Покупець анулює замовлення і більше не замовляє цю позицію."],
+ c:1,e:"Згідно з п. 9.4.1, за недопоставку Товару для заходів зі стимулювання збуту (акцій) Покупець має право стягнути <strong>упущену вигоду у розмірі та порядку, визначених Додатком №2</strong>, від загальної вартості непоставленого акційного Товару. В акційний період ця відповідальність особливо критична — мережа вже витратила кошти на маркетинг."},
+
+{s:"Розділ 9 · Порушення строку вивезення",r:"п. 9.5",
+ q:"Яка відповідальність настає для Постачальника при порушенні строків вивезення Товару зі складу Покупця понад 7 робочих днів?",
+ o:["Покупець нараховує пеню 0,5% від вартості Товару за кожен день понад строк.",
+    "Покупець вправі утилізувати Товар; Постачальник безумовно компенсує всі витрати на утилізацію та повну вартість продукції, фактично сплачену Покупцем. Покупець звільняється від обов'язку сплачувати за такий Товар.",
+    "Покупець безкоштовно зберігає Товар до прибуття транспорту Постачальника.",
+    "Товар переходить у власність Покупця як компенсація за зберігання."],
+ c:1,e:"Згідно з п. 9.5, при порушенні строку вивезення понад <strong>7 (сім) робочих днів</strong> Покупець вправі утилізувати Товар. Постачальник <strong>безумовно компенсує всі документально підтверджені витрати на утилізацію та повну вартість продукції</strong>. Покупець при цьому звільняється від обов'язку сплачувати за Товар, що підлягає поверненню."}
+];
+
+// update counts
+document.getElementById('total-q-count').textContent = Q.length;
+document.getElementById('q-total').textContent = Q.length;
+document.getElementById('f-total-fin').textContent = Q.length;
+
+let current=0, correctFirst=0, extraAttempts=0, answered=false, attempts=0, userName='';
+const LETTERS=['А','Б','В','Г'];
+
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
+function checkName(){document.getElementById('btn-start').disabled=document.getElementById('user-name').value.trim().length<2}
+
+function startQuiz(){
+  userName=document.getElementById('user-name').value.trim();
+  current=0;correctFirst=0;extraAttempts=0;
+  showScreen('screen-quiz');
+  document.getElementById('q-who').textContent=userName;
+  renderQuestion();
+}
+function restartQuiz(){showScreen('screen-start')}
+
+function renderQuestion(){
+  answered=false;attempts=0;
+  const q=Q[current];
+  const pct=Math.round((current/Q.length)*100);
+  document.getElementById('q-num').textContent=current+1;
+  document.getElementById('progress-bar').style.width=pct+'%';
+  document.getElementById('score-display').textContent=correctFirst;
+  const sd=q.s?`<div class="section-divider">${q.s}</div>`:'';
+  const opts=q.o.map((o,i)=>`<div class="opt" id="opt-${i}" onclick="pick(${i})"><div class="opt-letter">${LETTERS[i]}</div><div class="opt-text">${o}</div></div>`).join('');
+  document.getElementById('quiz-body').innerHTML=`${sd}<div class="section-tag">${q.r}</div><div class="question-text">${q.q}</div><div class="options-list" id="opts">${opts}</div><div class="feedback-box" id="fb"></div><div class="attempt-hint" id="ah">⚡ Спробуй ще раз — підказка вже є</div><button class="btn-next" id="bn" onclick="nextQ()">${current+1<Q.length?'Наступне питання':'Завершити тест'} <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>`;
+  const b=document.getElementById('quiz-body');b.style.animation='none';requestAnimationFrame(()=>{b.style.animation=''});
+}
+
+function pick(idx){
+  if(answered)return;
+  const q=Q[current];const opts=document.querySelectorAll('.opt');const fb=document.getElementById('fb');const ah=document.getElementById('ah');
+  attempts++;
+  if(idx===q.c){
+    answered=true;if(attempts===1)correctFirst++;
+    opts.forEach(o=>o.classList.add('disabled'));opts[idx].classList.add('correct');
+    fb.className='feedback-box success show';fb.innerHTML=`<div class="fb-header">✓ Правильно!</div><div class="fb-text">${q.e}</div>`;
+    ah.classList.remove('show');document.getElementById('bn').classList.add('show');
+    document.getElementById('score-display').textContent=correctFirst;
+  } else {
+    extraAttempts++;opts[idx].classList.add('wrong','disabled');
+    fb.className='feedback-box error show';fb.innerHTML=`<div class="fb-header">✗ Не вірно</div><div class="fb-text">Уважно перечитай питання. <strong>Підказка:</strong> ${q.e}</div>`;
+    ah.classList.add('show');
+    setTimeout(()=>{opts[idx].classList.remove('wrong');opts.forEach((o,i)=>{if(i!==idx&&!o.classList.contains('disabled'))o.classList.remove('disabled')})},800);
+  }
+}
+
+function nextQ(){
+  current++;
+  if(current>=Q.length)showFinish();
+  else{renderQuestion();window.scrollTo({top:0,behavior:'smooth'});}
+}
+
+function showFinish(){
+  showScreen('screen-finish');
+  const total=Q.length,pct=Math.round((correctFirst/total)*100),passed=pct>=CONFIG.pass_threshold;
+  document.getElementById('finish-pct').textContent=pct+'%';
+  document.getElementById('f-correct').textContent=correctFirst;
+  document.getElementById('f-extra').textContent=extraAttempts;
+  document.getElementById('finish-name-tag').textContent=userName;
+  document.getElementById('trophy-ring').style.setProperty('--pct',pct);
+  const badge=document.getElementById('passed-badge');
+  if(passed){badge.className='passed-badge yes';badge.textContent='✓ ЗАРАХОВАНО';}
+  else{badge.className='passed-badge no';badge.textContent='✗ НЕ ЗАРАХОВАНО';}
+  let emoji,title,msg;
+  if(pct>=90){emoji='🏆';title='Відмінний результат!';msg='Ти чудово знаєш умови Е-Договору. Такий рівень знань допоможе уникати порушень у роботі з постачальниками.';}
+  else if(pct>=80){emoji='💪';title='Добрий результат!';msg='Більшість ключових норм знаєш добре. Зверни увагу на питання, де виникали труднощі.';}
+  else if(pct>=60){emoji='📚';title='Є над чим попрацювати.';msg='Базові процеси зрозумілі, але деякі важливі деталі потребують повторення. Рекомендуємо перечитати відповідні розділи Договору.';}
+  else{emoji='🔄';title='Потрібне повторення матеріалу.';msg='Незнання умов Договору може призвести до фінансових порушень. Вивчіть Договір та пройдіть тест повторно.';}
+  document.getElementById('trophy-emoji').textContent=emoji;
+  document.getElementById('finish-msg').innerHTML=`<strong>${title}</strong>${msg}`;
+  sendResult(pct,passed);window.scrollTo({top:0});
+}
+
+function sendResult(pct,passed){
+  const statusEl=document.getElementById('email-status');const statusText=document.getElementById('email-status-text');
+  if(CONFIG.form_id.includes('ВСТАВТЕ')){statusEl.className='email-status cfg';statusEl.children[0].textContent='⚙️';statusText.innerHTML='Налаштуйте Google Forms у блоці CONFIG. Дивіться Інструкцію_налаштування_Google_Forms.html';return;}
+  statusEl.className='email-status sending';statusEl.children[0].innerHTML='<span class="spin">⟳</span>';statusText.textContent='Зберігаємо результат у таблицю HR...';
+  const now=new Date();const d=now.toLocaleDateString('uk-UA')+' '+now.toLocaleTimeString('uk-UA',{hour:'2-digit',minute:'2-digit'});
+  const passedStr=passed?'ЗАРАХОВАНО ✓':'НЕ ЗАРАХОВАНО ✗';
+  const url=`https://docs.google.com/forms/d/${CONFIG.form_id}/formResponse`;
+  const body=new URLSearchParams();
+  body.append(CONFIG.entry_name,userName);body.append(CONFIG.entry_score,pct+'%');
+  body.append(CONFIG.entry_correct,`${correctFirst} / ${Q.length}`);body.append(CONFIG.entry_extra,String(extraAttempts));
+  body.append(CONFIG.entry_passed,passedStr);body.append(CONFIG.entry_date,d);
+  fetch(url,{method:'POST',mode:'no-cors',body})
+    .then(()=>{statusEl.className='email-status sent';statusEl.children[0].textContent='✓';statusText.textContent='Результат збережено у таблицю HR';})
+    .catch(()=>{statusEl.className='email-status failed';statusEl.children[0].textContent='⚠️';statusText.textContent='Не вдалося зберегти. Перевірте інтернет-з\'єднання.';});
+}
+</script>
+</body>
+</html>
